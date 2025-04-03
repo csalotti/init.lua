@@ -13,7 +13,6 @@ vim.o.hlsearch = false
 
 -- Make line numbers default
 vim.wo.number = true
-
 -- Add Relative line number
 vim.wo.relativenumber = true
 
@@ -43,9 +42,7 @@ vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
 -- Set completeopt to have a better completion experience
-vim.o.completeopt = 'menuone,noselect'
+vim.o.completeopt = 'menuone,preview,noinsert,noselect'
 
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
-
--- vim: ts=2 sts=2 sw=2 et

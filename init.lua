@@ -1,4 +1,10 @@
-require 'core'
+-- Options must be imported before lazy
+require("config.options")
+require("config.lazy")
+require("config.abbrev")
+require("config.keymaps")
+require("config.autocmds")
+require("config.commands")
 
--- The line beneath this is called `modeline`. See `:help modeline`
--- vim: ts=2 sts=2 sw=2 et
+-- NVIM theme
+vim.cmd.colorscheme 'rose-pine'
