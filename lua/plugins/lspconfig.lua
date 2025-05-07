@@ -51,6 +51,7 @@ return {
                 },
                 clangd = {},
                 rust_analyzer = {},
+                fish_lsp = {},
             }
             return servers
         end,

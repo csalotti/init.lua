@@ -8,7 +8,7 @@ Custom nvim configuration, based on [kickstarter.nvim](https://github.com/dam900
 .
 ├── init.lua      # (DO NOT CHANGE) entry point
 └── lua
-    ├── core      # Core functionnalitires : maps, lazy and options
+    ├── config    # Core Config : maps, lazy, options, command, lsp, functions, ...
     └── plugins   # Plugins or group of plugins config
 ```
 
@@ -16,6 +16,6 @@ Custom nvim configuration, based on [kickstarter.nvim](https://github.com/dam900
 
 Plugins are installed and configured in their dedicasted file. Muliple plugins can be installed in the same file (e.g. appeareance for themes and other options)
 
-### LSP 
+### LSP
 
 LSP is handled with Mason and LSP config. All configuration is currently done on mason file use default config.
