@@ -6,5 +6,5 @@ require("config.keymaps")
 require("config.autocmds")
 require("config.commands")
 
--- NVIM theme
+-- NVIM colorscheme
 vim.cmd.colorscheme 'rose-pine'

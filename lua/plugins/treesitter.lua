@@ -1,5 +1,3 @@
--- [[ Configure Treesitter ]]
--- See `:help nvim-treesitter`
 return {
   -- Highlight, edit, and navigate code
   'nvim-treesitter/nvim-treesitter',
@@ -9,7 +7,7 @@ return {
   build = ':TSUpdate',
   opts = {
     -- Add languages to be installed here that you want installed for treesitter
-    ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'vimdoc', 'vim', 'bash', 'terraform', 'yaml', 'json', 'toml'},
+    ensure_installed = { 'c', 'cpp', 'lua', 'python', 'rust', 'vimdoc', 'vim', 'bash', 'terraform', 'yaml', 'json', 'toml' },
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
