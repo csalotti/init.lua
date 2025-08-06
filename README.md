@@ -1,21 +1,17 @@
 # NVIM config
 
-Custom nvim configuration, based on [kickstarter.nvim](https://github.com/dam9000/kickstart-modular.nvim)
+Custom NVIM config based of the following principle:
 
-## Structure
+- As simple as acceptable (by me) and easy to maintain and upgrad
+- Use latest stable release
+- Inclusion of few essential plugins for QOA (nvim-lsp-config for example) only
+- Custom logic can be implemented manually as a tool for better learning how nvim works
 
-```bash
-.
-├── init.lua      # (DO NOT CHANGE) entry point
-└── lua
-    ├── config    # Core Config : maps, lazy, options, command, lsp, functions, ...
-    └── plugins   # Plugins or group of plugins config
-```
+## Improvement methodology
 
-## Plugins
+The way the config will evolve is simple : Make changes when needed or when expected behavior are not met.
 
-Plugins are installed and configured in their dedicasted file. Muliple plugins can be installed in the same file (e.g. appeareance for themes and other options)
-
-### LSP
-
-LSP is handled with Mason and LSP config. All configuration is currently done on mason file use default config.
+The following are good example:
+- Switch to nativa package managment, since it accepts config reloading
+- Auto-match quotes and other elements that comes into pairs
+- ...

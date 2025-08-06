@@ -1,14 +1,6 @@
-return {
+vim.lsp.config("basedpyright", {
 	settings = {
-		python = {
-			pythonPath = "./venv/bin/python",
-		},
-		basedpyright = {
-			-- Using Ruff's import organizer
-                        disableOrganizeImports = true,
-                        analysis = {
-                            typeCheckingMode = "basic"
-                        },
-                },
-        },
-}
+		python = { pythonPath = vim.fn.exepath("python3") },
+		basedpyright = { disableOrganizeImports = true, analysis = { typeCheckingMode = "standard" } },
+	},
+})
