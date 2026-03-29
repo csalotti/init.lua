@@ -1,7 +1,6 @@
 -- Global
 vim.g.mapleader      = " "
 vim.g.maplocalleader = " "
-
 --Bootstrap lazy.nvim
 local lazypath       = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
@@ -38,9 +37,36 @@ require("lazy").setup({
 					"ruff",
 					"clangd",
 					"rust_analyzer",
-					"fish_lsp"
+					"fish_lsp",
+					"zls",
+					"glsl_analyzer",
+					"bashls",
+					-- "ty",
+					"slangd",
+					"dbt",
 				})
 			end
+		},
+		{
+			'saghen/blink.cmp',
+			-- optional: provides snippets for the snippet source
+			dependencies = {
+				'rafamadriz/friendly-snippets'
+			},
+			version = '1.*',
+			opts = {
+				keymap = {
+					preset = 'default',
+					['<enter>'] = { 'select_and_accept', 'fallback' },
+					['<Tab>'] = { 'select_next', 'fallback' },
+					['<S-Tab>'] = { 'select_prev', 'fallback' },
+				},
+				signature = { enabled = true },
+				completion = {
+					documentation = { auto_show = true },
+					menu = { draw = { treesitter = { 'lsp' } } },
+				},
+			},
 		},
 		{ "nvim-treesitter/nvim-treesitter", branch = 'main', lazy = false, build = ":TSUpdate" },
 		{
@@ -52,19 +78,29 @@ require("lazy").setup({
 			"ibhagwan/fzf-lua",
 			lazy = false,
 			keys = {
-				{ "<leader>sf",      "<cmd>FzfLua files<cr>",     desc = "Fzf search files" },
-				{ "<leader>sg",      "<cmd>FzfLua live_grep<cr>", desc = "Fzf search files" },
-				{ "<leader><space>", "<cmd>FzfLua buffers<cr>",   desc = "Fzf search files" },
+				{ "<leader>sf",      "<cmd>FzfLua files<cr>",                desc = "Fzf search files" },
+				{ "<leader>sg",      "<cmd>FzfLua live_grep<cr>",            desc = "Fzf search grep files" },
+				{ "<leader>ht",      "<cmd>FzfLua helptags<cr>",             desc = "Fzf search help tags" },
+				{ "<leader><space>", "<cmd>FzfLua buffers<cr>",              desc = "Fzf search buffers" },
+				{ "<leader>/",       "<cmd>FzfLua lgrep_curbuf<cr>",         desc = "Fzf search current buffer" },
+				{ "<leader>ds",      "<cmd>FzfLua lsp_document_symbols<cr>", desc = "Fzf search document symbols" },
+				{ "<leader>ws",      "<cmd>FzfLua lsp_workspace_sybols<cr>", desc = "Fzf search workspace symbols" },
 			},
 			opts = {
-				grep = { hidden = true },
+				winopts = { preview = { layout = "vertical" } },
+				keymap = { fzf = { ["ctrl-q"] = "select-all+accept" } },
 			}
 		},
+		"lewis6991/gitsigns.nvim",
 		"sindrets/diffview.nvim",
-		"vague2k/vague.nvim",
+		{
+			"nvim-lualine/lualine.nvim",
+			opts = { sections = { lualine_c = { { "filename", path = 1 } } } },
+			dependencies = { "echasnovski/mini.icons" }
+		},
+		"rebelot/kanagawa.nvim",
 	}
 })
-
 -- Visaul settings
 vim.wo.number         = true
 vim.wo.relativenumber = true
@@ -75,6 +111,7 @@ vim.o.termguicolors   = true
 vim.o.cursorline      = true
 vim.o.scrolloff       = 10
 vim.o.sidescrolloff   = 10
+-- vim.o.winborder       = 'rounded'
 
 -- Indentation
 vim.o.sts             = 4
@@ -90,11 +127,11 @@ vim.o.writebackup     = false
 -- Behavior
 vim.o.clipboard       = 'unnamedplus'
 vim.o.ignorecase      = true
-vim.o.smartcase       = true
+vim.o.smartcase       = false
 
 
 -- Colorscheme
--- vim.cmd.colorscheme 'vague'
+vim.cmd.colorscheme 'kanagawa-wave'
 
 -- Diagnostic
 vim.diagnostic.config({
@@ -108,16 +145,21 @@ vim.keymap.set('n', '<leader>dq', vim.diagnostic.setqflist)
 vim.keymap.set('v', '>', '>gv', { desc = "Indent right and reselet" })
 vim.keymap.set('v', '<', '<gv', { desc = "Indent left and reselet" })
 -- Move to window using the <ctrl> hjkl keys
-vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
+-- vim.keymap.set("n", "<C-h>", "<C-w>h", { desc = "Go to Left Window", remap = true })
+-- vim.keymap.set("n", "<C-j>", "<C-w>j", { desc = "Go to Lower Window", remap = true })
+-- vim.keymap.set("n", "<C-k>", "<C-w>k", { desc = "Go to Upper Window", remap = true })
+-- vim.keymap.set("n", "<C-l>", "<C-w>l", { desc = "Go to Right Window", remap = true })
 -- Splits
 vim.keymap.set("n", "<leader>sv", ":vsplit<CR>", { desc = "Split Vertically" })
 vim.keymap.set("n", "<leader>sh", ":split<CR>", { desc = "Split Horizontally" })
 -- Move blocks
-vim.keymap.set("v", "<C-k>", ":m '<-2<CR>gv=gv", { desc = "Move Selection up" })
-vim.keymap.set("v", "<C-j>", ":m '>+1<CR>gv=gv", { desc = "Move Selection down" })
+vim.keymap.set("v", "<S-C-k>", ":m '<-2<CR>gv=gv", { desc = "Move Selection up" })
+vim.keymap.set("v", "<S-C-j>", ":m '>+1<CR>gv=gv", { desc = "Move Selection down" })
+-- Remap LSP commands
+vim.keymap.set("n", "<leader>rn", "grn", { desc = "LSP Rename", remap = true })
+vim.keymap.set("n", "<leader>ca", "gra", { desc = "LSP Code Action", remap = true })
+vim.keymap.set('n', '<leader>gd', vim.lsp.buf.definition,
+	{ desc = 'Jump to the definition of the symbol under the cursor' })
 
 -- Commands
 -- lsp
@@ -127,18 +169,18 @@ vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
-		-- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
-		if client:supports_method('textDocument/completion') then
-			-- Optional: trigger autocompletion on EVERY keypress. May be slow!
-			local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
-			client.server_capabilities.completionProvider.triggerCharacters = chars
-			vim.lsp.completion.enable(true, client.id, args.buf, {
-				autotrigger = true,
-				convert = function(item)
-					return { abbr = item.label:gsub('%b()', '') }
-				end,
-			})
-		end
+		-- -- Enable auto-completion. Note: Use CTRL-Y to select an item. |complete_CTRL-Y|
+		-- if client:supports_method('textDocument/completion') then
+		-- 	-- Optional: trigger autocompletion on EVERY keypress. May be slow!
+		-- 	local chars = {}; for i = 32, 126 do table.insert(chars, string.char(i)) end
+		-- 	client.server_capabilities.completionProvider.triggerCharacters = chars
+		-- 	vim.lsp.completion.enable(true, client.id, args.buf, {
+		-- 		autotrigger = true,
+		-- 		convert = function(item)
+		-- 			return { abbr = item.label:gsub('%b()', '') }
+		-- 		end,
+		-- 	})
+		-- end
 		-- Auto-format ("lint") on save.
 		-- Usually not needed if server supports "textDocument/willSaveWaitUntil".
 		if not client:supports_method('textDocument/willSaveWaitUntil')
@@ -151,20 +193,19 @@ vim.api.nvim_create_autocmd("LspAttach", {
 				end,
 			})
 		end
-		if client.server_capabilities.inlayHintProvider then
-			vim.lsp.inlay_hint.enable(true)
-		end
+		-- if client.server_capabilities.inlayHintProvider then
+		-- 	vim.lsp.inlay_hint.enable(true)
+		-- end
 
-		vim.keymap.set('i', '<c-space>', function() vim.lsp.completion.get() end,
-			{ desc = "Trigger lsp completion once in the current buffer" })
-		-- Map <Tab> and <S-Tab> to an expression (|:map-<expr>|):
-		vim.keymap.set('i', '<Tab>', function() return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>" end,
-			{ expr = true })
-		vim.keymap.set('i', '<S-Tab>', function()
-			return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
-		end, { expr = true })
-		vim.keymap.set('n', 'gd', vim.lsp.buf.definition,
-			{ desc = 'Jump to the definition of the symbol under the cursor' })
+		-- vim.keymap.set('i', '<c-space>', function() vim.lsp.completion.get() end,
+		-- 	{ desc = "Trigger lsp completion once in the current buffer" })
+		-- -- Map <Tab> and <S-Tab> to an expression (|:map-<expr>|):
+		-- vim.keymap.set('i', '<Tab>', function() return vim.fn.pumvisible() == 1 and "<C-n>" or "<Tab>" end,
+		-- 	{ expr = true })
+		-- vim.keymap.set('i', '<S-Tab>', function()
+		-- 	return vim.fn.pumvisible() == 1 and "<C-p>" or "<S-Tab>"
+		-- end, { expr = true })
+		-- vim.keymap.set({ "i", "n" }, '<C-k>', vim.lsp.buf.signature_help)
 	end,
 })
 -- Highlight on yank
@@ -177,6 +218,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 	group = highlight_group,
 	pattern = '*',
 })
+
 -- Remove trailing whitespaces
 vim.api.nvim_create_autocmd("BufWritePre", {
 	pattern = { "*" },
